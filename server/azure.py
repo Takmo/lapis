@@ -5,6 +5,7 @@ from shutil import copytree
 from StringIO import StringIO
 from subprocess import call, PIPE, Popen
 from time import sleep
+from thread import start_new_thread
 
 class AzureProcess:
     def __init__(self, command, wait=True, printcmd=False):
@@ -162,12 +163,15 @@ def azure_start(name):
     print "Server is online and accessible!"
 
     # Run start.sh
-    print "Running install script on server."
     if call(["ssh", "-o", "StrictHostKeyChecking=no",
         "%s@%s.cloudapp.net" % ("minecraft", name), "screen -d -m ./spigot/start.sh"]) is not 0:
         print "Error running start script. Giving up."
         return
     print "Start script completed successfully."
+    try:
+        thread.start_new_thread(listen_for_shutdown, ("minecraft", name))
+    except:
+        print "Error: unable to start listen_for_shutdown thread"
 
 def azure_stop(name):
     # Stop the VM
@@ -184,4 +188,12 @@ def can_ssh(username, name):
         "%s@%s.cloudapp.net" % (username, name), "uname -a"]) is not 0:
         return False
     return True
+
+def listen_for_shutdown(username, name):
+    while True:
+        if not can_ssh(username, name):
+            azure_stop(name)
+            return
+        else:
+            sleep(15)
 
