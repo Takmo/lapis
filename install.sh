@@ -18,4 +18,4 @@ ant jar
 cp server/plugins/ShutdownManager.jar ~/spigot/plugins/
 cd ~/spigot/
 sed -i '$ a\sudo poweroff' start.sh
-./start.sh
+screen -d -m ./start.sh
