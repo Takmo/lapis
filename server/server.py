@@ -10,6 +10,7 @@ class Server:
             with open("server.cfg") as f:
                 self.config = json.load(f)
         self.tokens = {}
+        self.online = False
 
     def check_token(self, token):
         for t in self.tokens:

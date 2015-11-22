@@ -16,7 +16,7 @@ class AzureProcess:
         # Start the process.
         command.insert(0, "azure")
         if printcmd:
-            print command
+            print(command)
         self.proc = Popen(command, stdout=PIPE, stderr=PIPE)
 
         # Perhaps wait until completed.
@@ -45,30 +45,13 @@ class AzureProcess:
 
 def azure_login():
     # Launch the login process.
-    proc = AzureProcess(["login"], wait=False)
-
-    # Wait for the code, then print it!
-    while True:
-        out = proc.readline()
-        if "sign in" in out:
-            # Isolate the code by itself.
-            ci = out.find("code") + 5
-            code = out[ci:ci+9]
-
-            # Print the code.
-            print "Go to https://aka.ms/devicelogin and enter the following code: " + code
-            break
-        else:
-            sleep(0.5)
-
-    # Wait for login to finish.
-    proc.wait()
-
-    # Display results.
-    if proc.poll() is 0:
-        print "Azure login successful!"
-    else:
-        print "There was an error logging in."
+    proc = AzureProcess(["account", "download"])
+    
+    out = proc.communicate()[0]
+    index = out.find("http")
+    url = out[index:index+60].partition("\n")[0]
+    
+    print url
 
 def azure_create_server(name, location="Central US", image="", sshkey=""):
     # Set the image appropriately.
@@ -157,6 +140,44 @@ def azure_create_server(name, location="Central US", image="", sshkey=""):
     # Everything should be done!
     print "Installation should have completed successfully!"
     print "Try connecting to %s.cloudapp.net in Minecraft!" % name
+
+def azure_start(name):
+    # Start the VM.
+    print "Starting VM %s. This might take a while..." % name
+    proc = AzureProcess(["vm", "start", name])
+    if proc.poll() is not 0:
+        print proc.communicate()[1]
+        return
+    else:
+        print "VM %s successfully started." % name
+
+    # Wait for it to come up.
+    tries = 0
+    while not can_ssh("minecraft", name):
+        if tries is 60:
+            print "Server never became active. Giving up."
+            return
+        tries = tries + 1
+        sleep(10)
+    print "Server is online and accessible!"
+
+    # Run start.sh
+    print "Running install script on server."
+    if call(["ssh", "-o", "StrictHostKeyChecking=no",
+        "%s@%s.cloudapp.net" % ("minecraft", name), "screen -d -m ./spigot/start.sh"]) is not 0:
+        print "Error running start script. Giving up."
+        return
+    print "Start script completed successfully."
+
+def azure_stop(name):
+    # Stop the VM
+    print "Stopping VM %s. This might take a while..." % name
+    proc = AzureProcess(["vm", "shutdown", name])
+    if proc.poll() is not 0:
+        print proc.communicate()[1]
+        return
+    else:
+        print "VM %s successfully stopped." % name
 
 def can_ssh(username, name):
     if call(["ssh", "-o", "ConnectTimeout=10", "-o", "StrictHostKeyChecking=no",
