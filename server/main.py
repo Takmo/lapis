@@ -64,4 +64,4 @@ def uploaded_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def main():
     # do stuff
-    
+    print "blah"
