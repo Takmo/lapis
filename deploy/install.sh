@@ -1,4 +1,5 @@
 sudo apt-get install git openjdk-7-jre-headless openjdk-7-jdk tar
+cd ~/
 mkdir spigot
 cd spigot/
 curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
