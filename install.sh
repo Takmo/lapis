@@ -15,6 +15,7 @@ sed -i -- 's/false/true/g' eula.txt
 cd ~/ShutdownManager
 cp ~/spigot/Spigot/Spigot-API/target/spigot-api-1.8.8-R0.1-SNAPSHOT.jar spigot.jar
 ant jar
+mkdir ~/spigot/plugins/
 cp server/plugins/ShutdownManager.jar ~/spigot/plugins/
 cd ~/spigot/
 sed -i '$ a\sudo poweroff' start.sh
