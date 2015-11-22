@@ -44,7 +44,8 @@ class AzureProcess:
     def wait(self):
         return self.proc.wait()
 
-def azure_login():
+# We want to use this method on the future, but we need something to show.
+def azure_login_longterm():
     # Launch the login process.
     proc = AzureProcess(["account", "download"])
     
@@ -53,6 +54,33 @@ def azure_login():
     url = out[index:index+60].partition("\n")[0]
     
     print url
+
+def azure_login():
+    # Launch the login process.
+    proc = AzureProcess(["login"], wait=False)
+
+    # Wait for the code, then print it!
+    while True:
+        out = proc.readline()
+        if "sign in" in out:
+            # Isolate the code by itself.
+            ci = out.find("code") + 5
+            code = out[ci:ci+9]
+
+            # Print the code.
+            print "Go to https://aka.ms/devicelogin and enter the following code: " + code
+            break
+        else:
+            sleep(0.5)
+
+    # Wait for login to finish.
+    proc.wait()
+
+    # Display results.
+    if proc.poll() is 0:
+        print "Azure login successful!"
+    else:
+        print "There was an error logging in."
 
 def azure_create_server(name, location="Central US", image="", sshkey=""):
     # Set the image appropriately.

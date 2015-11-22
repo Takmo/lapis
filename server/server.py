@@ -6,11 +6,12 @@ import os
 class Server:
     def __init__(self):
         self.config = {}
-        if os.path.exists("server.cfg"):
-            with open("server.cfg") as f:
+        if os.path.exists("server.json"):
+            with open("server.json") as f:
                 self.config = json.load(f)
         self.tokens = {}
-        self.online = False
+        self.online = self.config["online"]
+        self.name = self.config["name"]
 
     def check_token(self, token):
         for t in self.tokens:
