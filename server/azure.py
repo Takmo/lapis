@@ -16,7 +16,7 @@ class AzureProcess:
         # Start the process.
         command.insert(0, "azure")
         if printcmd:
-            print command
+            print(command)
         self.proc = Popen(command, stdout=PIPE, stderr=PIPE)
 
         # Perhaps wait until completed.
@@ -45,30 +45,13 @@ class AzureProcess:
 
 def azure_login():
     # Launch the login process.
-    proc = AzureProcess(["login"], wait=False)
-
-    # Wait for the code, then print it!
-    while True:
-        out = proc.readline()
-        if "sign in" in out:
-            # Isolate the code by itself.
-            ci = out.find("code") + 5
-            code = out[ci:ci+9]
-
-            # Print the code.
-            print "Go to https://aka.ms/devicelogin and enter the following code: " + code
-            break
-        else:
-            sleep(0.5)
-
-    # Wait for login to finish.
-    proc.wait()
-
-    # Display results.
-    if proc.poll() is 0:
-        print "Azure login successful!"
-    else:
-        print "There was an error logging in."
+    proc = AzureProcess(["account", "download"])
+    
+    out = proc.communicate()[0]
+    index = out.find("http")
+    url = out[index:index+60].partition("\n")[0]
+    
+    print url
 
 def azure_create_server(name, location="Central US", image="", sshkey=""):
     # Set the image appropriately.

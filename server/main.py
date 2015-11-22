@@ -4,17 +4,21 @@ import os
 import uuid
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, send_from_directory
+from azure import auth_user
 
+UPLOAD_FOLDER = '/path/to/uploads'
+ALLOWED_EXTENSIONS = set(['.publishsettings'])
 
 # create our little application :)
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'lapis.db'),
     DEBUG=False,
-    SECRET_KEY=os.urandom(24),
+    SECRET_KEY=os.urandom(24), 
 ))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -37,6 +41,26 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('login'))
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+    return render_template('upload.html', error='Upload failed')
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 @app.route('/')
 def main():
-    
+   # do stuff
+    print "blah"
