@@ -6,8 +6,9 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
         render_template, flash, redirect
 from auth import auth_user, connect_sqlite
 from server import Server
-from azure import can_ssh
+from azure import can_ssh, azure_start, azure_stop
 import thread
+from time import sleep
 
 from uuid import uuid4
 
@@ -57,7 +58,7 @@ def status():
 def starting():
     if not server.check_token(session["token"]):
         return redirect("/static/login.html")
-    #thread.start_new_thread(azure_start(server.name))
+    thread.start_new_thread(azure_start,(server.name,))
     address = "%s.cloudapp.net" % server.name
     return render_template("starting.html", server_address=address)
 
@@ -95,8 +96,8 @@ def listen_for_shutdown(username, name):
 
 
 if __name__ == '__main__':
-    try:
-        thread.start_new_thread(listen_for_shutdown, ("minecraft", server.name))
-    except:
-        print "Error: unable to start listen_for_shutdown thread"
+    #try:
+        #thread.start_new_thread(listen_for_shutdown, ("minecraft", server.name))
+    #except:
+        #print "Error: unable to start listen_for_shutdown thread"
     app.run(debug=True)
