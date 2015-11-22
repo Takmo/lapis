@@ -1,6 +1,7 @@
 # See LICENSE file in top directory!
 
 import os
+import uuid
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
@@ -12,30 +13,30 @@ app = Flask(__name__)
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'lapis.db'),
-    DEBUG=True,
-    SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='default'
+    DEBUG=False,
+    SECRET_KEY=os.urandom(24),
 ))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
+        username = request.form['username']
+        password = request.form['password']
+        if not auth_user(username, password):
+            error = 'Invalid username or password'
         else:
-            session['logged_in'] = True
+            session['token'] = uuid4()
             flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            return redirect(url_for('main'))
     return render_template('login.html', error=error)
-
-
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
+    session.pop('token', None)
     flash('You were logged out')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('login'))
+
+@app.route('/')
+def main():
+    print("blah")
