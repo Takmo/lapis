@@ -1,7 +1,7 @@
 # See LICENSE file in top directory!
 
 import os
-import uuid
+from uuid import uuid4
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, send_from_directory
@@ -32,7 +32,7 @@ def login():
         else:
             session['token'] = uuid4()
             flash('You were logged in')
-            return redirect(url_for('main'))
+            return redirect(url_for('upload'))
     return render_template('login.html', error=error)
 
 @app.route('/logout')
@@ -58,9 +58,10 @@ def upload():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return redirect(url_for('main'))
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def main():
-   # do stuff
-    print "blah"
+    # do stuff
+    
