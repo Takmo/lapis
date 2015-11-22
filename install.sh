@@ -1,4 +1,4 @@
-yes | sudo apt-get install git openjdk-7-jre-headless openjdk-7-jdk tar
+yes | sudo apt-get install git openjdk-7-jre-headless openjdk-7-jdk tar ant
 sed -i -- 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
 sudo service ssh restart
 cd ~/
