@@ -8,6 +8,7 @@ curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSucce
 git config --global --unset core.autocrlf
 java -jar BuildTools.jar 
 echo "#/bin/sh" > start.sh
+sed -i '$ a\cd ~/spigot/' start.sh
 sed -i '$ a\java -Xms512M -Xmx1024M -jar spigot-1.8.8.jar' start.sh
 chmod +x start.sh
 ./start.sh 
