@@ -103,7 +103,7 @@ def azure_create_server(name, location="Central US", image="", sshkey=""):
         return
     else:
         print "Port opened successfully."
-def tryit(username, password, name, sshkey=""):
+
     # Attempt to copy home SSH key to authorized_keys.
     # Make sure the directory exists.
     if not os.path.exists("./.ssh"):
