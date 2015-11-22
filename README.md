@@ -27,6 +27,7 @@ You'll need a few things before you try installing lapis.
 * `sudo npm install azure-cli`
 * `sudo pip install Flask`
 * `sudo pip install gunicorn`
+* `sshpass`
 
 Once you've got those taken care of, go ahead and clone this to your
 machine and run `./start.sh`. As long as this is running, you will
