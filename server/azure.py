@@ -157,3 +157,10 @@ def azure_create_server(name, location="Central US", image="", sshkey=""):
     # Everything should be done!
     print "Installation should have completed successfully!"
     print "Try connecting to %s.cloudapp.net in Minecraft!" % name
+
+def can_ssh(username, name):
+    if call(["ssh", "-o", "ConnectTimeout=10", "-o", "StrictHostKeyChecking=no",
+        "%s@%s.cloudapp.net" % (username, name), "uname -a"]) is not 0:
+        return False
+    return True
+

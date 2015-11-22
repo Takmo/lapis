@@ -39,4 +39,4 @@ def logout():
 
 @app.route('/')
 def main():
-    print("blah")
+    
