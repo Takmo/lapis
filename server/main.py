@@ -7,6 +7,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from auth import auth_user, connect_sqlite
 from server import Server
 from azure import can_ssh
+import thread
 
 from uuid import uuid4
 
@@ -35,8 +36,10 @@ def auth():
         else:
             token = uuid4()
             session["token"] = token
+            session.modified = True
             server.insert_token(token, username)
-            return redirect("/")
+            server.online = True
+            return redirect("/starting")
     return redirect("/static/login.html")
 
 @app.route("/logout")
@@ -49,6 +52,14 @@ def status():
     if server.online:
         return "ONLINE"
     return "OFFLINE"
+
+@app.route("/starting")
+def starting():
+    if not server.check_token(session["token"]):
+        return redirect("/static/login.html")
+    #thread.start_new_thread(azure_start(server.name))
+    address = "%s.cloudapp.net" % server.name
+    return render_template("starting.html", server_address=address)
 
 def allowed_file(filename):
     return '.' in filename and \
