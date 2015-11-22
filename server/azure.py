@@ -196,11 +196,7 @@ def azure_start(name):
         print "Error running start script. Giving up."
         return
     print "Start script completed successfully."
-    try:
-        thread.start_new_thread(listen_for_shutdown, ("minecraft", name))
-    except:
-        print "Error: unable to start listen_for_shutdown thread"
-
+    
 def azure_stop(name):
     # Stop the VM
     print "Stopping VM %s. This might take a while..." % name
@@ -217,11 +213,4 @@ def can_ssh(username, name):
         return False
     return True
 
-def listen_for_shutdown(username, name):
-    while True:
-        if not can_ssh(username, name):
-            azure_stop(name)
-            return
-        else:
-            sleep(15)
 

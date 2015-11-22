@@ -6,6 +6,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
         render_template, flash, redirect
 from auth import auth_user, connect_sqlite
 from server import Server
+from azure import can_ssh
 
 from uuid import uuid4
 
@@ -73,5 +74,18 @@ def uploaded_file(filename):
 def main():
     return redirect("/static/login.html")
 
+def listen_for_shutdown(username, name):
+    while True:
+        if server.online and not can_ssh(username, name):
+            azure_stop(name)
+            return
+        else:
+            sleep(15)
+
+
 if __name__ == '__main__':
+    try:
+        thread.start_new_thread(listen_for_shutdown, ("minecraft", server.name))
+    except:
+        print "Error: unable to start listen_for_shutdown thread"
     app.run(debug=True)
