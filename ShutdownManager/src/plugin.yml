@@ -1,0 +1,6 @@
+name: ShutdownManager
+version: 1.0.0
+description: Automatically shuts down a spigot server when it has been empty for 15 minutes.
+author: Michael
+website: https://github.com/takmo/lapis
+main: ShutdownManager

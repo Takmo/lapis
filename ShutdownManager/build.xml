@@ -1,0 +1,22 @@
+<project>
+    <path id="classpath">
+        <fileset dir="." includes="bukkit.jar" />
+    </path>
+    <target name="clean">
+        <delete dir="build" />
+    </target>
+    <target name="compile">
+        <mkdir dir="build/classes" />
+        <javac srcdir="src" destdir="build/classes" classpathref="classpath" debug="true" 
+debuglevel="lines,vars,source">
+            <compilerarg value="-Xlint:deprecation"/>
+        </javac>
+    </target>
+    <target name="jar" depends="compile">
+        <mkdir dir="build/jar" />
+        <jar destfile="build/jar/ShutdownManager.jar" basedir="build/classes">
+            <zipfileset dir="./src" includes="plugin.yml" fullpath="plugin.yml" />
+        </jar>
+        <copy file="build/jar/ShutdownManager.jar" tofile="./server/plugins/ShutdownManager.jar" />
+    </target>
+</project>
