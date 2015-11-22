@@ -17,4 +17,5 @@ cp ~/spigot/Spigot/Spigot-API/target/spigot-api-1.8.8-R0.1-SNAPSHOT.jar spigot.j
 ant jar
 cp server/plugins/ShutdownManager.jar ~/spigot/plugins/
 cd ~/spigot/
+sed -i '$ a\sudo poweroff' start.sh
 ./start.sh
