@@ -121,7 +121,7 @@ def azure_create_server(name, location="Central US", image="", sshkey=""):
     if not os.path.exists("./.ssh"):
         os.makedirs("./.ssh")
     with open("./.ssh/authorized_keys", "w") as outfile:
-        with open("/home/randall/.ssh/id_rsa.pub", "r") as infile:
+        with open("/home/celdir/.ssh/id_rsa.pub", "r") as infile:
             outfile.write(infile.read())
             outfile.write("\n")
         outfile.write(sshkey)

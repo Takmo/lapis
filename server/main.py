@@ -87,6 +87,7 @@ def main():
     return redirect("/static/login.html")
 
 def listen_for_shutdown(username, name):
+    sleep(300)
     while True:
         if server.online and not can_ssh(username, name):
             azure_stop(name)
