@@ -1,3 +1,3 @@
 #!/bin/sh
 cd server
-python2 ./server/setup.py
+python2 setup.py
