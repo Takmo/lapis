@@ -140,7 +140,7 @@ def azure_create_server(name, location="Central US", image="", sshkey=""):
 
     # Copy everything to the server.
     print "Copying files to server."
-    if call(["sshpass", "-p", password, "scp", "-o", "StrictHostKeyChecking=no", "-r", "./ShutdownManager",
+    if call(["sshpass", "-p", password, "scp", "-o", "StrictHostKeyChecking=no", "-r", "../ShutdownManager",
         "%s@%s.cloudapp.net:~" % (username, name)]) is not 0:
         print "Error copying ShutdownManager to server. Giving up."
         return
@@ -148,7 +148,7 @@ def azure_create_server(name, location="Central US", image="", sshkey=""):
         "%s@%s.cloudapp.net:~" % (username, name)]) is not 0:
         print "Error copying authorized_keys to server. Giving up."
         return
-    if call(["scp", "-o", "StrictHostKeyChecking=no", "./install.sh",
+    if call(["scp", "-o", "StrictHostKeyChecking=no", "../install.sh",
         "%s@%s.cloudapp.net:~" % (username, name)]) is not 0:
         print "Error copying install.sh to server. Giving up."
         return
