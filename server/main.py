@@ -1,5 +1,5 @@
 # See LICENSE file in top directory!
-
+import sys
 import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
@@ -91,14 +91,14 @@ def listen_for_shutdown(username, name):
     while True:
         if server.online and not can_ssh(username, name):
             azure_stop(name)
-            return
+            sys.exit()
         else:
             sleep(15)
 
 
 if __name__ == '__main__':
-    #try:
-        #thread.start_new_thread(listen_for_shutdown, ("minecraft", server.name))
-    #except:
-        #print "Error: unable to start listen_for_shutdown thread"
+    try:
+        thread.start_new_thread(listen_for_shutdown, ("minecraft", server.name))
+    except:
+        print "Error: unable to start listen_for_shutdown thread"
     app.run(debug=True)
