@@ -1,4 +1,4 @@
-# API Documentation #
+# API Documentation
 
 This document serves as a planning area for an API related to this service.
 
@@ -33,13 +33,13 @@ failure, and further action may be required.
 More information on API calls, as well as any additional information they may
 return, can be found below.
 
-* /server/start *
+### /server/start
 
 Attempts to start the server. This command will fail if the server is not in the
 `stopped` phase. A successful return denotes that the server has transitioned
 from the `stopped` phase to the `starting` phase.
 
-* /server/status *
+### /server/status
 
 Returns one of four states that the server is currently in.
 
@@ -48,7 +48,7 @@ Returns one of four states that the server is currently in.
 * `running` - the server is currently active and should be accessible.
 * `stopping` - the state is being saved and the server is being terminated.
 
-* /server/stop *
+### /server/stop
 
 Attempts to stop the server. This command will fail if the server is already in
 the `stopped` or `stopping` phase. A successful return denotes that the server
