@@ -6,6 +6,12 @@ from StringIO import StringIO
 from subprocess import call, PIPE, Popen
 from time import sleep
 from thread import start_new_thread
+from logger import Logger
+
+log = Logger('azure')
+log.info('This is info')
+sleep(1)
+log.warning('This is a warning')
 
 class AzureProcess:
     def __init__(self, command, wait=True, printcmd=False):
