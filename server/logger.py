@@ -1,9 +1,10 @@
 import time
 import logging
 
-def Logger(name):
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
+def initialize():
+    # get root logger and set its level
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
 
     # file handler that logs everything
     fh = logging.FileHandler('lapis.log')
@@ -18,9 +19,15 @@ def Logger(name):
     fh.setFormatter(formatter)
     ch.setFormatter(formatter)
 
-    # attach handlers to logger
-    logger.addHandler(fh)
-    logger.addHandler(ch)
+    # attach handlers to root
+    root.addHandler(fh)
+    root.addHandler(ch)
 
-    return logger
+def get_logger(name):
+    # If this is the first time a logger is requested, initialize the root logger with the correct handlers and such
+    if (len(logging.getLogger().handlers) is 0):
+        initialize()
+
+    # return a child of the root logger with the correct name
+    return logging.getLogger(name)
 
