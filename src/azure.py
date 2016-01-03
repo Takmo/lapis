@@ -208,7 +208,7 @@ def azure_stop(name):
         print "VM %s successfully stopped." % name
 
 def can_ssh(username, name):
-    if call(["ssh", "-o", "ConnectTimeout=10", "-o", "StrictHostKeyChecking=no",
+    if call(["ssh", "-o", "ConnectTimeout=5", "-o", "StrictHostKeyChecking=no",
         "%s@%s.cloudapp.net" % (username, name), "uname -a"]) is not 0:
         return False
     return True
