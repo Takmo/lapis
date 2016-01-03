@@ -24,7 +24,7 @@ boot-up an offline server for playing.
 
 You'll need a few things before you try installing lapis.
 
-* `sudo npm install azure-cli`
+* `sudo npm install -g azure-cli`
 * `sudo pip install Flask`
 * `sudo pip install gunicorn`
 * `sshpass`
